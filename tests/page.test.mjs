@@ -94,3 +94,7 @@ test("main pushes deploy to Firebase Hosting after the tests pass", () => {
   assert.doesNotMatch(wf, /pull_request/);
   for (const [, ref] of wf.matchAll(/uses: \S+@(\S+)/g)) assert.match(ref, /^[0-9a-f]{40}$/, ref);
 });
+
+test("CV link points to /curriculo", () => {
+  assert.match(html, /href="https:\/\/nandomoreira\.dev\/curriculo"[^>]*>\s*<span class="label">Currículo/);
+});
