@@ -2,6 +2,14 @@
 
 ## [Unreleased]
 
+## [0.1.1] - 2026-11-07
+
+### Fixed
+
+- Fix the CV link to point to nandomoreira.dev/curriculo instead of /cv.
+
+---
+
 ## [0.1.0] - 2026-11-07
 
 ### Added
