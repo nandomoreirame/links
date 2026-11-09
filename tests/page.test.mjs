@@ -109,3 +109,10 @@ test("live strip links both channels, repeats them hidden from assistive tech an
   const motion = css.match(/@media \(prefers-reduced-motion: no-preference\) \{\s*\.live-track \{ animation: live-slide/);
   assert.ok(motion, "animation only under no-preference");
 });
+
+test("uses the Fernando Moreira logo favicons, all present on disk", () => {
+  for (const href of ["favicon.ico", "favicon.svg", "favicon-32.png", "favicon-16.png", "apple-touch-icon.png"]) {
+    assert.match(html, new RegExp(`<link rel="(?:icon|apple-touch-icon)" href="${href}"`), href);
+    assert.ok(existsSync(new URL(`../${href}`, import.meta.url)), `missing file: ${href}`);
+  }
+});
