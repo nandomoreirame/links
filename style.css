@@ -121,7 +121,7 @@ footer a:hover { color: var(--muted); }
 
 /* Live strip above the page: two copies of the channels, the track slides one
    copy to the left and loops. Hover or focus pauses it. */
-.live-bar { overflow: hidden; border-bottom: 1px solid var(--hairline); }
+.live-bar { overflow: hidden; border-bottom: 1px solid var(--hairline); background: var(--surface); }
 .live-track { display: flex; width: max-content; }
 
 .live-group {
