@@ -118,3 +118,59 @@ footer a:hover { color: var(--muted); }
 @media (prefers-reduced-motion: reduce) {
   .link { transition: none; }
 }
+
+/* Live strip above the page: two copies of the channels, the track slides one
+   copy to the left and loops. Hover or focus pauses it. */
+.live-bar { overflow: hidden; border-bottom: 1px solid var(--hairline); }
+.live-track { display: flex; width: max-content; }
+
+.live-group {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: space-around;
+  gap: 32px;
+  min-width: 100vw;
+  padding-inline: 24px;
+}
+
+.live-item {
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+  color: var(--foreground);
+  font-size: 0.8125rem;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.live-inner { display: contents; }
+.live-inner > * + * { margin-left: 16px; }
+
+.live-tag {
+  padding: 0 8px;
+  border: 1px solid color-mix(in oklch, var(--primary) 50%, transparent);
+  border-radius: 4px;
+  color: var(--primary);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.live-item:hover .live-text,
+.live-item:focus-visible .live-text { text-decoration: underline; text-underline-offset: 4px; }
+.live-item:focus-visible { outline-offset: -2px; }
+
+@keyframes live-slide { to { transform: translateX(-50%); } }
+
+@media (prefers-reduced-motion: no-preference) {
+  .live-track { animation: live-slide 40s linear infinite; }
+  .live-track:hover,
+  .live-track:focus-within { animation-play-state: paused; }
+}
+
+/* Without motion the strip shows the first copy only; the second sits clipped
+   past the right edge. */
+@media (prefers-reduced-motion: reduce) {
+  .live-track { width: 100%; }
+  .live-group { flex-wrap: wrap; }
+}

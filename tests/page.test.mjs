@@ -98,3 +98,14 @@ test("main pushes deploy to Firebase Hosting after the tests pass", () => {
 test("CV link points to /curriculo", () => {
   assert.match(html, /href="https:\/\/nandomoreira\.dev\/curriculo"[^>]*>\s*<span class="label">Currículo/);
 });
+
+test("live strip links both channels, repeats them hidden from assistive tech and stops under reduced motion", () => {
+  for (const url of ["https://www.youtube.com/@nandomoreiradev", "https://www.twitch.tv/baratotonto"]) {
+    assert.equal((html.match(new RegExp(`class="live-item" href="${url}"`, "g")) ?? []).length, 2, url);
+  }
+  assert.match(html, /<div class="live-group" aria-hidden="true">[\s\S]*?tabindex="-1"[\s\S]*?tabindex="-1"/);
+  assert.match(html, /9h00 às 12h00/);
+  assert.match(css, /@keyframes live-slide \{ to \{ transform: translateX\(-50%\)/);
+  const motion = css.match(/@media \(prefers-reduced-motion: no-preference\) \{\s*\.live-track \{ animation: live-slide/);
+  assert.ok(motion, "animation only under no-preference");
+});

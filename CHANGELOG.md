@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Added
+
+- Add a looping strip above the page announcing the daily live (9h00 to 12h00) with links to the YouTube and Twitch channels; it pauses on hover and stops with reduced motion.
+
 ## [0.1.1] - 2026-11-07
 
 ### Fixed
