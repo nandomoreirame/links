@@ -16,9 +16,13 @@ test("has exactly one h1", () => {
 });
 
 test("lists the main links", () => {
-  for (const label of ["YouTube", "GitHub", "LinkedIn", "Currículo"]) {
+  for (const label of ["YouTube", "GitHub", "LinkedIn", "/dev/null", "Currículo"]) {
     assert.match(html, new RegExp(label), `missing link: ${label}`);
   }
+});
+
+test("links to the dev-null profile", () => {
+  assert.match(html, /href="https:\/\/dev-null\.sh\/@nandomoreirame"/);
 });
 
 test("external links open safely", () => {
