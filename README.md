@@ -11,7 +11,7 @@ npm test       # valida estrutura, links, acessibilidade e paleta
 
 ## Editar
 
-Os links ficam em `index.html` (uma `<li>` cada). As cores são variáveis em `style.css`.
+Os links ficam em `index.html` (uma `<li>` cada). A versão em inglês é `en/index.html` (servida em `/en/`): mantenha os dois arquivos com os mesmos destinos, e o teste `tests/i18n.test.mjs` confere isso. As cores são variáveis em `style.css`.
 
 ## Segurança
 
