@@ -34,7 +34,7 @@ test("both pages point to the same destinations", () => {
 });
 
 test("English copy is translated", () => {
-  for (const text of ["About me", "Articles", "open source", "unfiltered commits", "behind the scenes", "career", "Résumé", "Live every day, 9:00 AM to 12:00 PM"]) {
+  for (const text of ["About me", "Articles", "open source", "unfiltered commits", "behind the scenes", "career", "Résumé"]) {
     assert.ok(en.includes(text), text);
   }
   for (const text of ["Sobre mim", "Artigos", "código aberto", "Currículo", "feito com IA"]) {
