@@ -21,18 +21,34 @@
   <link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32">
   <link rel="icon" href="/favicon-16.png" type="image/png" sizes="16x16">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-  <link rel="stylesheet" href="/style.css?v=0.1.12">
+  <link rel="stylesheet" href="/style.css?v=0.1.15">
 </head>
 <body data-pointer-field>
   <main>
     <header class="profile">
-      <picture>
-        <source srcset="/assets/fernando-moreira-v3-480.avif" type="image/avif">
-        <source srcset="/assets/fernando-moreira-v3-480.webp" type="image/webp">
-        <img class="avatar" src="/assets/fernando-moreira-v3-960.png" width="120" height="120" alt="Portrait of Fernando Moreira">
-      </picture>
-      <h1>Fernando Moreira</h1>
-      <p class="bio">Software engineer in São Paulo, Brazil. Open source tools, AI and Linux.</p>
+      <div class="portrait-orbit">
+        <picture>
+          <source srcset="/assets/fernando-moreira-v3-480.avif" type="image/avif">
+          <source srcset="/assets/fernando-moreira-v3-480.webp" type="image/webp">
+          <img class="avatar" src="/assets/fernando-moreira-v3-960.png" width="120" height="120" alt="Portrait of Fernando Moreira">
+        </picture>
+        <div class="stack-orbit stack-orbit-outer" aria-hidden="true">
+          <span class="stack-orbit-icon"><img src="/assets/stack/typescript.svg" width="19" height="19" alt=""></span>
+          <span class="stack-orbit-icon"><img src="/assets/stack/react.svg" width="19" height="19" alt=""></span>
+          <span class="stack-orbit-icon"><img src="/assets/stack/nextdotjs.svg" width="19" height="19" alt=""></span>
+          <span class="stack-orbit-icon"><img src="/assets/stack/linux.svg" width="19" height="19" alt=""></span>
+          <span class="stack-orbit-marker"></span>
+        </div>
+        <div class="stack-orbit stack-orbit-inner" aria-hidden="true">
+          <span class="stack-orbit-icon"><img src="/assets/stack/python.svg" width="19" height="19" alt=""></span>
+          <span class="stack-orbit-icon"><img src="/assets/stack/rust.svg" width="19" height="19" alt=""></span>
+          <span class="stack-orbit-marker"></span>
+        </div>
+      </div>
+      <div class="profile-copy">
+        <h1>Fernando Moreira</h1>
+        <p class="bio">Software engineer in São Paulo, Brazil. Open source tools, AI and Linux.</p>
+      </div>
     </header>
 
     <nav class="lang" aria-label="Language">
