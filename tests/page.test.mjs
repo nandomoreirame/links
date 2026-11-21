@@ -57,59 +57,110 @@ test("no em or en dashes in the copy", () => {
 test("ships one local script and no third-party code", () => {
   const scripts = html.match(/<script[^>]*>/g) ?? [];
   assert.equal(scripts.length, 1);
-  assert.match(scripts[0], /src="pointer\.js\?v=\d+\.\d+\.\d+"/);
+  assert.match(scripts[0], /src="city\.js\?v=\d+\.\d+\.\d+"/);
   assert.doesNotMatch(scripts[0], /https?:/);
 });
 
-test("body keeps the dot grid and masks the HTML layer around the pointer", () => {
-  assert.match(html, /<body[^>]*data-pointer-field/);
-  assert.match(css, /@property --gx/);
-  assert.match(css, /\[data-pointer-field\]::before/);
-  assert.match(css, /\.pointer-code\s*\{[^}]*pointer-events: none/);
-  assert.match(css, /mask-image: radial-gradient\(circle 11rem at var\(--gx\) var\(--gy\)/);
-});
-
-test("adds decorative HTML, CSS and JavaScript as inert text for a fine pointer", () => {
-  const children = [];
-  const field = { prepend: child => children.push(child), addEventListener() {} };
-  const createElement = tag => ({
+test("renders an interactive SVG city and resets its parallax on pointer exit", () => {
+  const element = tag => ({
     tag,
     attributes: {},
     children: [],
+    listeners: {},
+    style: { setProperty(name, value) { this[name] = value; } },
+    setAttribute(name, value) { this.attributes[name] = String(value); },
+    removeAttribute(name) { delete this.attributes[name]; },
+    getAttribute(name) { return this.attributes[name]; },
+    hasAttribute(name) { return Object.hasOwn(this.attributes, name); },
     append(...nodes) { this.children.push(...nodes); },
-    setAttribute(name, value) { this.attributes[name] = value; },
+    addEventListener(type, handler) { this.listeners[type] = handler; },
+    focus() { this.focused = true; },
   });
-  const js = readFileSync(new URL("../pointer.js", import.meta.url), "utf8");
+  const body = element("body");
+  const root = { ...element("html"), lang: "pt-BR" };
+  const viewport = { ...element("window"), innerWidth: 1000, innerHeight: 800 };
+  const motion = { ...element("media"), matches: true };
+  let paint;
+  const timers = [];
+  const js = readFileSync(new URL("../city.js", import.meta.url), "utf8");
   runInNewContext(js, {
-    document: { querySelector: () => field, createElement },
-    matchMedia: query => ({ matches: query === "(pointer: fine)" }),
+    document: {
+      body,
+      documentElement: root,
+      createElement: element,
+      createElementNS: (_, tag) => element(tag),
+    },
+    window: viewport,
+    matchMedia: () => motion,
+    requestAnimationFrame: callback => { paint = callback; return 1; },
+    cancelAnimationFrame: () => {},
+    setTimeout: (callback, delay) => {
+      const timer = { callback, delay, cleared: false };
+      timers.push(timer);
+      return timer;
+    },
+    clearTimeout: timer => { timer.cleared = true; },
+    Math: { floor: Math.floor, round: Math.round, random: () => 0.5 },
   });
-  assert.equal(children.length, 1);
-  assert.equal(children[0].tag, "pre");
-  assert.equal(children[0].attributes["aria-hidden"], "true");
-  const parts = children[0].children;
-  const source = parts.map(part => typeof part === "string" ? part : part.textContent).join("");
-  assert.match(source, /<main[\s>]/);
-  assert.match(source, /<a href=/);
-  assert.match(source, /\.link:hover\s*\{/);
-  assert.match(source, /const links = \[/);
-  for (const [kind, value] of [
-    ["tag", "<main"],
-    ["string", '"/posts"'],
-    ["selector", ".link:hover"],
-    ["property", "border-color"],
-    ["keyword", "const"],
-    ["number", "0.75rem"],
-  ]) {
-    assert.ok(parts.some(part => part.tag === "span" && part.className === `token-${kind}` && part.textContent === value), kind);
-  }
-});
+  const [scene] = body.children;
+  const layers = name => scene.children.filter(child => child.attributes.class.split(" ").includes(name));
+  const [moon] = layers("noir-moon");
+  const [skyline] = layers("noir-skyline-near");
+  const [farSkyline] = layers("noir-skyline-far");
+  assert.equal(moon.tag, "svg");
+  assert.equal(moon.attributes["aria-hidden"], "true");
+  assert.equal(skyline.tag, "svg");
+  assert.equal(farSkyline.attributes["aria-hidden"], "true");
+  const staticLights = farSkyline.children.filter(child => child.attributes.class?.split(" ").includes("window-light-static"));
+  assert.ok(staticLights.length >= 32);
+  assert.ok(staticLights.every(light => !light.attributes.role && !light.attributes["data-random-lit"]));
+  assert.equal(layers("noir-rain").length, 2);
+  assert.equal(layers("noir-skyline").length, 2);
+  const windows = skyline.children.filter(child => child.attributes.role === "button");
+  assert.ok(windows.length > 60);
+  const [window, nextWindow] = windows;
+  assert.equal(window.attributes.tabindex, "0");
+  assert.match(window.attributes["aria-label"], /^Janela /);
+  assert.equal(window.attributes["aria-pressed"], "false");
+  const buildingLights = () => {
+    const groups = new Map();
+    for (const item of windows) {
+      const building = item.attributes["data-building"];
+      const lit = item.attributes["data-random-lit"] !== undefined || item.attributes["aria-pressed"] === "true";
+      groups.set(building, (groups.get(building) ?? 0) + Number(lit));
+    }
+    return groups;
+  };
+  assert.equal(buildingLights().size, 16);
+  for (const count of buildingLights().values()) assert.ok(count === 3 || count === 4);
+  assert.equal(timers.length, 1);
+  assert.equal(timers[0].delay, 1000);
+  const beforeTick = windows.filter(item => item.attributes["data-random-lit"] !== undefined).length;
+  timers[0].callback();
+  for (const count of buildingLights().values()) assert.ok(count === 3 || count === 4);
+  const afterTick = windows.filter(item => item.attributes["data-random-lit"] !== undefined).length;
+  assert.equal(Math.abs(afterTick - beforeTick), 1);
+  assert.equal(timers.at(-1).delay, 1000);
+  window.listeners.click();
+  assert.equal(window.attributes["aria-pressed"], "true");
+  for (const count of buildingLights().values()) assert.ok(count === 3 || count === 4);
+  window.listeners.keydown({ key: " ", preventDefault() {} });
+  assert.equal(window.attributes["aria-pressed"], "false");
+  for (const count of buildingLights().values()) assert.ok(count === 3 || count === 4);
+  assert.ok(Object.hasOwn(window.attributes, "data-interacted"));
+  window.listeners.keydown({ key: "ArrowRight", preventDefault() {} });
+  assert.equal(window.attributes.tabindex, "-1");
+  assert.equal(nextWindow.attributes.tabindex, "0");
+  assert.equal(nextWindow.focused, true);
 
-test("pointer script only runs for a fine pointer and no reduced motion", () => {
-  const js = readFileSync(new URL("../pointer.js", import.meta.url), "utf8");
-  assert.match(js, /\(pointer: fine\)/);
-  assert.match(js, /prefers-reduced-motion: reduce/);
-  assert.match(js, /--gx/);
+  viewport.listeners.pointermove({ clientX: 750, clientY: 200, pointerType: "mouse" });
+  paint();
+  assert.equal(scene.style["--scene-x"], "8px");
+  assert.equal(scene.style["--scene-y"], "-8px");
+
+  root.listeners.pointerleave();
+  assert.equal(scene.style["--scene-x"], "0px");
+  assert.equal(scene.style["--scene-y"], "0px");
 });
 
 test("link label slides right on hover, only without reduced motion", () => {

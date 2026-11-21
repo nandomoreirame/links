@@ -43,7 +43,7 @@ test("English copy is translated", () => {
 });
 
 test("English page loads assets from the root and keeps external links safe", () => {
-  for (const f of ["style.css", "pointer.js", "favicon.ico", "favicon.svg", "apple-touch-icon.png"]) {
+  for (const f of ["style.css", "city.js", "favicon.ico", "favicon.svg", "apple-touch-icon.png"]) {
     assert.match(en, new RegExp(`(?:href|src)="/${f.replace(".", "\\.")}`), f);
   }
   assert.match(en, /src="\/assets\/fernando-moreira-v3-960\.png"/);
