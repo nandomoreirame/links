@@ -118,9 +118,8 @@ ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
 .label { font-weight: 600; }
 .hint { color: var(--muted); font-size: 0.8125rem; text-align: right; }
 
-.link:hover { background: var(--elevated); border-color: var(--primary); }
-
-.link.primary { border-color: var(--primary); }
+.link:hover,
+.link:focus-visible { background: var(--elevated); border-color: var(--primary); }
 
 :focus-visible { outline: 2px solid var(--primary); outline-offset: 3px; }
 
