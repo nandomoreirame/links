@@ -27,12 +27,10 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* Decorative dot grid. The amber copy shows only near the cursor, through a
-   mask the script positions; the neutral copy is always there. */
+/* The dot grid is static; the pointer reveals an inert HTML sketch over it. */
 [data-pointer-field] { position: relative; isolation: isolate; }
 
-[data-pointer-field]::before,
-[data-pointer-field]::after {
+[data-pointer-field]::before {
   content: "";
   position: fixed;
   inset: 0;
@@ -42,13 +40,34 @@ body {
   background-size: 1rem 1rem;
 }
 
-[data-pointer-field]::after {
-  background-image: radial-gradient(circle, var(--primary) 1px, transparent 1.5px);
-  mask-image: radial-gradient(circle 7rem at var(--gx) var(--gy), black, transparent);
+.pointer-code {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  margin: 0;
+  padding: 1rem;
+  overflow: hidden;
+  columns: 20rem;
+  column-fill: auto;
+  column-gap: 2rem;
+  color: var(--muted);
+  font: 0.8125rem/1.45 var(--mono);
+  user-select: none;
+  mask-image: radial-gradient(circle 11rem at var(--gx) var(--gy), black 25%, transparent);
   opacity: 0;
 }
 
-[data-pointer-field][data-active]::after { opacity: 1; }
+.pointer-code .token-tag { color: var(--primary); }
+.pointer-code .token-string { color: var(--success); }
+.pointer-code .token-selector { color: #39c5cf; }
+.pointer-code .token-keyword { color: #bc8cff; }
+.pointer-code .token-property { color: #79c0ff; }
+.pointer-code .token-number { color: #facf9e; }
+
+@media (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  [data-active] > .pointer-code { opacity: 1; }
+}
 
 main {
   width: min(100% - 32px, 480px);
@@ -114,10 +133,10 @@ footer a:hover { color: var(--muted); }
   .link:hover .label,
   .link:focus-visible .label { transform: translateX(6px); }
 
-  [data-pointer-field]::after {
+  .pointer-code {
     transition: opacity 250ms cubic-bezier(0, 0, 0.2, 1), --gx 250ms cubic-bezier(0, 0, 0.2, 1), --gy 250ms cubic-bezier(0, 0, 0.2, 1);
   }
-  [data-pointer-field][data-snap]::after { transition: opacity 250ms cubic-bezier(0, 0, 0.2, 1); }
+  [data-snap] > .pointer-code { transition: opacity 250ms cubic-bezier(0, 0, 0.2, 1); }
 }
 
 @media (prefers-reduced-motion: reduce) {

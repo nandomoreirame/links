@@ -1,6 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync, existsSync } from "node:fs";
+import { runInNewContext } from "node:vm";
 
 const html = readFileSync(new URL("../index.html", import.meta.url), "utf8");
 const css = readFileSync(new URL("../style.css", import.meta.url), "utf8");
@@ -56,15 +57,52 @@ test("no em or en dashes in the copy", () => {
 test("ships one local script and no third-party code", () => {
   const scripts = html.match(/<script[^>]*>/g) ?? [];
   assert.equal(scripts.length, 1);
-  assert.match(scripts[0], /src="pointer\.js"/);
+  assert.match(scripts[0], /src="pointer\.js\?v=\d+\.\d+\.\d+"/);
   assert.doesNotMatch(scripts[0], /https?:/);
 });
 
-test("body is the pointer field with a dot grid and amber glow", () => {
+test("body keeps the dot grid and masks the HTML layer around the pointer", () => {
   assert.match(html, /<body[^>]*data-pointer-field/);
   assert.match(css, /@property --gx/);
-  assert.match(css, /\[data-pointer-field\]::after/);
-  assert.match(css, /mask-image: radial-gradient\(circle 7rem at var\(--gx\) var\(--gy\)/);
+  assert.match(css, /\[data-pointer-field\]::before/);
+  assert.match(css, /\.pointer-code\s*\{[^}]*pointer-events: none/);
+  assert.match(css, /mask-image: radial-gradient\(circle 11rem at var\(--gx\) var\(--gy\)/);
+});
+
+test("adds decorative HTML, CSS and JavaScript as inert text for a fine pointer", () => {
+  const children = [];
+  const field = { prepend: child => children.push(child), addEventListener() {} };
+  const createElement = tag => ({
+    tag,
+    attributes: {},
+    children: [],
+    append(...nodes) { this.children.push(...nodes); },
+    setAttribute(name, value) { this.attributes[name] = value; },
+  });
+  const js = readFileSync(new URL("../pointer.js", import.meta.url), "utf8");
+  runInNewContext(js, {
+    document: { querySelector: () => field, createElement },
+    matchMedia: query => ({ matches: query === "(pointer: fine)" }),
+  });
+  assert.equal(children.length, 1);
+  assert.equal(children[0].tag, "pre");
+  assert.equal(children[0].attributes["aria-hidden"], "true");
+  const parts = children[0].children;
+  const source = parts.map(part => typeof part === "string" ? part : part.textContent).join("");
+  assert.match(source, /<main[\s>]/);
+  assert.match(source, /<a href=/);
+  assert.match(source, /\.link:hover\s*\{/);
+  assert.match(source, /const links = \[/);
+  for (const [kind, value] of [
+    ["tag", "<main"],
+    ["string", '"/posts"'],
+    ["selector", ".link:hover"],
+    ["property", "border-color"],
+    ["keyword", "const"],
+    ["number", "0.75rem"],
+  ]) {
+    assert.ok(parts.some(part => part.tag === "span" && part.className === `token-${kind}` && part.textContent === value), kind);
+  }
 });
 
 test("pointer script only runs for a fine pointer and no reduced motion", () => {
