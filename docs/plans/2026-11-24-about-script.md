@@ -2,7 +2,7 @@
 
 **Goal:** Serve a POSIX sh script at `links.nandomoreira.dev/about` that prints an about-me card in the terminal and opens the links in the browser only with `--open`.
 **Origin:** /dev implement
-**Status:** in progress
+**Status:** done
 **Out of scope:** Subscribe or follow actions, GitHub follow via `gh`, prompts, installers, telemetry, email and WhatsApp in the output.
 **Total Tasks:** 4
 
