@@ -236,7 +236,8 @@ parallaxAllowed.addEventListener("change", resetParallax);
 for (const button of document.querySelectorAll?.("[data-copy]") ?? []) {
   const source = document.getElementById(button.dataset.copy);
   if (!source) continue;
-  const label = button.textContent;
+  const text = button.querySelector("span") ?? button;
+  const label = text.textContent;
   let resetTimer = 0;
 
   const selectSource = () => {
@@ -250,10 +251,10 @@ for (const button of document.querySelectorAll?.("[data-copy]") ?? []) {
   const showCopied = () => {
     clearTimeout(resetTimer);
     button.setAttribute("data-copied", "");
-    button.textContent = button.dataset.labelCopied;
+    text.textContent = button.dataset.labelCopied;
     resetTimer = setTimeout(() => {
       button.removeAttribute("data-copied");
-      button.textContent = label;
+      text.textContent = label;
     }, 2000);
   };
 

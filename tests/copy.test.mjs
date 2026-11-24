@@ -29,7 +29,9 @@ const boot = ({ clipboard }) => {
   button.dataset.copy = "about-cmd";
   button.dataset.labelCopied = "Copiado";
   button.hidden = true;
-  button.textContent = "Copiar";
+  const label = element("span");
+  label.textContent = "Copiar";
+  button.querySelector = (sel) => (sel === "span" ? label : null);
   const command = element("code");
   command.textContent = "curl -fsSL links.nandomoreira.dev/about | sh";
   const timers = [];
@@ -53,7 +55,7 @@ const boot = ({ clipboard }) => {
     clearTimeout: () => {},
     Math: { floor: Math.floor, round: Math.round, random: () => 0.5 },
   });
-  return { button, command, timers, selection };
+  return { button, label, command, timers, selection };
 };
 
 test("Copy is revealed once the script runs", () => {
@@ -63,15 +65,15 @@ test("Copy is revealed once the script runs", () => {
 
 test("a click copies only the command and shows the copied state, then clears it", async () => {
   const written = [];
-  const { button, timers } = boot({ clipboard: { writeText: async (text) => written.push(text) } });
+  const { button, label, timers } = boot({ clipboard: { writeText: async (text) => written.push(text) } });
   await button.listeners.click();
   assert.deepEqual(written, ["curl -fsSL links.nandomoreira.dev/about | sh"]);
-  assert.equal(button.textContent, "Copiado");
+  assert.equal(label.textContent, "Copiado");
   assert.equal(button.hasAttribute("data-copied"), true);
   const reset = timers.at(-1);
   assert.ok(reset.delay >= 1500 && reset.delay <= 3000);
   reset.callback();
-  assert.equal(button.textContent, "Copiar");
+  assert.equal(label.textContent, "Copiar");
   assert.equal(button.hasAttribute("data-copied"), false);
 });
 

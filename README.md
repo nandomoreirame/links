@@ -11,18 +11,30 @@ npm test       # valida estrutura, links, acessibilidade e paleta
 
 ## Terminal: `curl | sh`
 
-Um cartão de visita para quem vive no terminal, vindo do mesmo repositório:
+Os links no terminal, vindos do mesmo repositório:
 
 ```bash
-curl -fsSL links.nandomoreira.dev/about | sh                  # imprime o cartão
-curl -fsSL links.nandomoreira.dev/about | sh -s -- --open     # abre os links no browser
+curl -fsSL links.nandomoreira.dev | sh                  # imprime os links
+curl -fsSL links.nandomoreira.dev | sh -s -- --open     # abre os links no browser
 ```
 
-O script é o [`about.sh`](about.sh), POSIX sh, servido em `/about` como texto puro: abra `links.nandomoreira.dev/about` no browser para ler antes de rodar. Flags: `--open`, `-n/--dry-run`, `--lang pt|en` (padrão pelo `LANG`), `--no-color`, `-h`, `-V`. Os links dele precisam ser os mesmos de `index.html`; o teste `tests/about.test.mjs` confere.
+O script é o [`about.sh`](about.sh), POSIX sh. Flags: `--open`, `-n/--dry-run`, `--lang pt|en` (padrão pelo `LANG`), `--no-color`, `-h`, `-V`. Os links dele precisam ser os mesmos de `index.html`; o teste `tests/about.test.mjs` confere.
+
+### Como a home vira script
+
+O Firebase Hosting não decide pela requisição, então quem escolhe é a borda (Cloudflare). Uma regra de Transform, URL Rewrite, reescreve `/` para `/about` quando o cliente não pede HTML (o curl manda `Accept: */*`, o navegador manda `text/html`):
+
+```
+Quando:  http.host eq "links.nandomoreira.dev" and http.request.uri.path eq "/"
+         and not any(http.request.headers["accept"][*] contains "text/html")
+Então:   Rewrite path para /about   (estático)
+```
+
+`/about` continua servindo o script como texto puro (`firebase.json`: rewrite para `about.sh`, `Content-Type: text/plain`), então dá para ler o fonte no navegador. Sem a regra, `curl links.nandomoreira.dev | sh` tenta executar o HTML e falha; o comando `curl -fsSL links.nandomoreira.dev/about | sh` funciona sempre.
 
 ## Editar
 
-O cartão do comando fica no fim de `index.html` e `en/index.html` (o botão Copiar é revelado pelo `city.js`). Os links ficam em `index.html` (uma `<li>` cada). A versão em inglês é `en/index.html` (servida em `/en/`): mantenha os dois arquivos com os mesmos destinos, e o teste `tests/i18n.test.mjs` confere isso. As cores são variáveis em `style.css`.
+O card do comando fica no fim de `index.html` e `en/index.html` (o botão Copiar é revelado pelo `city.js`). Os links ficam em `index.html` (uma `<li>` cada). A versão em inglês é `en/index.html` (servida em `/en/`): mantenha os dois arquivos com os mesmos destinos, e o teste `tests/i18n.test.mjs` confere isso. As cores são variáveis em `style.css`.
 
 ## Segurança
 

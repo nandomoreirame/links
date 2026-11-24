@@ -1,7 +1,7 @@
 #!/bin/sh
 # about.sh: print Fernando Moreira's about-me card in the terminal.
 # Source: https://github.com/nandomoreirame/links (file about.sh)
-# Run:    curl -fsSL links.nandomoreira.dev/about | sh
+# Run:    curl -fsSL links.nandomoreira.dev | sh
 # It makes no network call, writes no file and asks nothing.
 # Links open in the browser only with: sh -s -- --open
 
@@ -22,8 +22,8 @@ Options:
   -V, --version  show the version
 
 Examples:
-  curl -fsSL links.nandomoreira.dev/about | sh
-  curl -fsSL links.nandomoreira.dev/about | sh -s -- --open
+  curl -fsSL links.nandomoreira.dev | sh
+  curl -fsSL links.nandomoreira.dev | sh -s -- --open
 USAGE
 }
 

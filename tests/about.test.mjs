@@ -144,3 +144,7 @@ test("the script links match index.html and en/index.html", () => {
   assert.deepEqual(inScript, hrefs("index.html"));
   assert.deepEqual(inScript, hrefs("en/index.html"));
 });
+
+test("the script header documents the home command", () => {
+  assert.match(readFileSync(script, "utf8"), /curl -fsSL links\.nandomoreira\.dev \| sh/);
+});

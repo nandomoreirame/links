@@ -20,7 +20,7 @@
   <link rel="icon" href="favicon-32.png" type="image/png" sizes="32x32">
   <link rel="icon" href="favicon-16.png" type="image/png" sizes="16x16">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
-  <link rel="stylesheet" href="style.css?v=0.1.22">
+  <link rel="stylesheet" href="style.css?v=0.1.23">
 </head>
 <body>
   <main>
@@ -70,18 +70,17 @@
     </nav>
 
     <section class="about-card" aria-labelledby="about-title">
-      <h2 id="about-title">Conheça o Fernando pelo terminal</h2>
-      <p>Um comando imprime meu cartão. Com <code>--open</code>, abre as redes no browser.</p>
+      <h2 id="about-title">Veja os links no seu terminal</h2>
       <div class="terminal">
-        <div class="terminal-bar">
-          <span>about.sh</span>
-          <button type="button" class="copy" data-copy="about-cmd" data-label-copied="Copiado" aria-live="polite" hidden>Copiar</button>
-        </div>
-        <code id="about-cmd" tabindex="0">curl -fsSL links.nandomoreira.dev/about | sh</code>
+        <code id="about-cmd" tabindex="0">curl -fsSL links.nandomoreira.dev | sh</code>
+        <button type="button" class="copy" data-copy="about-cmd" data-label-copied="Copiado" aria-live="polite" hidden>
+          <svg class="icon-copy" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+          <svg class="icon-check" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+          <span class="sr-only">Copiar</span>
+        </button>
       </div>
-      <p>O script é aberto: <a href="/about">leia antes de rodar</a>.</p>
     </section>
   </main>
-  <script src="city.js?v=0.1.21"></script>
+  <script src="city.js?v=0.1.22"></script>
 </body>
 </html>

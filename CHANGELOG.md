@@ -4,8 +4,8 @@
 
 ### Added
 
-- Add a Terminal Noir card with the `about.sh` command and a one-click Copy button in place of the credit footer, in pt and en. The credit link to nandomoreira.dev is gone.
-- Add `about.sh`, served at `/about`: `curl -fsSL links.nandomoreira.dev/about | sh` prints an about card in pt or en and opens the links in the browser only with `--open`.
+- Add a short Terminal Noir card in place of the credit footer, in pt and en: a heading, the `curl -fsSL links.nandomoreira.dev | sh` command and an icon-only Copy button. The credit link to nandomoreira.dev is gone.
+- Add `about.sh`, served at `/about`: it prints the links in pt or en and opens them in the browser only with `--open`. A Cloudflare rewrite maps `/` to it for non-HTML clients (see the README).
 - Apply the Fernando Moreira logo favicons (ico, svg, 16/32 png) and the apple-touch icon, same as nandomoreira.dev.
 - Add a looping strip above the page announcing the daily live (9h00 to 12h00) with links to the YouTube and Twitch channels; it pauses on hover and stops with reduced motion.
 
