@@ -173,8 +173,12 @@ test("open graph image and url are absolute", () => {
   assert.match(html, /property="og:url" content="https:\/\/[^"]+"/);
 });
 
-test("footer credits the author with a link", () => {
-  assert.match(html, /<footer>\s*feito com IA e com &lt;3 por <a href="https:\/\/nandomoreira\.dev"[^>]*>nandomoreira\.dev<\/a>\s*<\/footer>/);
+test("the credit footer is gone and the about card closes the main", () => {
+  for (const path of ["../index.html", "../en/index.html"]) {
+    const page = readFileSync(new URL(path, import.meta.url), "utf8");
+    assert.doesNotMatch(page, /<footer/, path);
+    assert.match(page, /<section class="about-card"[\s\S]*<\/section>\s*<\/main>/, path);
+  }
 });
 
 test("main pushes deploy to Firebase Hosting after the tests pass", () => {

@@ -21,7 +21,7 @@
   <link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32">
   <link rel="icon" href="/favicon-16.png" type="image/png" sizes="16x16">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-  <link rel="stylesheet" href="/style.css?v=0.1.21">
+  <link rel="stylesheet" href="/style.css?v=0.1.22">
 </head>
 <body>
   <main>
@@ -70,9 +70,18 @@
       </ul>
     </nav>
 
-    <footer>
-      made with AI and with &lt;3 by <a href="https://nandomoreira.dev" rel="noopener noreferrer">nandomoreira.dev</a>
-    </footer>
+    <section class="about-card" aria-labelledby="about-title">
+      <h2 id="about-title">Meet Fernando in your terminal</h2>
+      <p>One command prints my card. With <code>--open</code>, it opens my profiles in your browser.</p>
+      <div class="terminal">
+        <div class="terminal-bar">
+          <span>about.sh</span>
+          <button type="button" class="copy" data-copy="about-cmd" data-label-copied="Copied" aria-live="polite" hidden>Copy</button>
+        </div>
+        <code id="about-cmd" tabindex="0">curl -fsSL links.nandomoreira.dev/about | sh</code>
+      </div>
+      <p>The script is open: <a href="/about">read it before you run it</a>.</p>
+    </section>
   </main>
   <script src="/city.js?v=0.1.20"></script>
 </body>

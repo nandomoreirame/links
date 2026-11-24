@@ -20,7 +20,7 @@
   <link rel="icon" href="favicon-32.png" type="image/png" sizes="32x32">
   <link rel="icon" href="favicon-16.png" type="image/png" sizes="16x16">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
-  <link rel="stylesheet" href="style.css?v=0.1.21">
+  <link rel="stylesheet" href="style.css?v=0.1.22">
 </head>
 <body>
   <main>
@@ -69,9 +69,18 @@
       </ul>
     </nav>
 
-    <footer>
-      feito com IA e com &lt;3 por <a href="https://nandomoreira.dev" rel="noopener noreferrer">nandomoreira.dev</a>
-    </footer>
+    <section class="about-card" aria-labelledby="about-title">
+      <h2 id="about-title">Conheça o Fernando pelo terminal</h2>
+      <p>Um comando imprime meu cartão. Com <code>--open</code>, abre as redes no browser.</p>
+      <div class="terminal">
+        <div class="terminal-bar">
+          <span>about.sh</span>
+          <button type="button" class="copy" data-copy="about-cmd" data-label-copied="Copiado" aria-live="polite" hidden>Copiar</button>
+        </div>
+        <code id="about-cmd" tabindex="0">curl -fsSL links.nandomoreira.dev/about | sh</code>
+      </div>
+      <p>O script é aberto: <a href="/about">leia antes de rodar</a>.</p>
+    </section>
   </main>
   <script src="city.js?v=0.1.20"></script>
 </body>
