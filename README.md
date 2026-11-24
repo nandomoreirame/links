@@ -18,7 +18,7 @@ curl -fsSL links.nandomoreira.dev | sh                  # imprime os links
 curl -fsSL links.nandomoreira.dev | sh -s -- --open     # abre os links no browser
 ```
 
-O script é o [`about.sh`](about.sh), POSIX sh. Flags: `--open`, `-n/--dry-run`, `--lang pt|en` (padrão pelo `LANG`), `--no-color`, `-h`, `-V`. Os links dele precisam ser os mesmos de `index.html`; o teste `tests/about.test.mjs` confere.
+O script é o [`links.sh`](links.sh), POSIX sh. Flags: `--open`, `-n/--dry-run`, `--lang pt|en` (padrão pelo `LANG`), `--no-color`, `-h`, `-V`. Os links dele precisam ser os mesmos de `index.html`; o teste `tests/about.test.mjs` confere.
 
 ### Como a home vira script
 
@@ -30,7 +30,7 @@ Quando:  http.host eq "links.nandomoreira.dev" and http.request.uri.path eq "/"
 Então:   Rewrite path para /about   (estático)
 ```
 
-`/about` continua servindo o script como texto puro (`firebase.json`: rewrite para `about.sh`, `Content-Type: text/plain`), então dá para ler o fonte no navegador. Sem a regra, `curl links.nandomoreira.dev | sh` tenta executar o HTML e falha; o comando `curl -fsSL links.nandomoreira.dev/about | sh` funciona sempre.
+`/about` continua servindo o script como texto puro (`firebase.json`: rewrite para `links.sh`, `Content-Type: text/plain`), então dá para ler o fonte no navegador. Sem a regra, `curl links.nandomoreira.dev | sh` tenta executar o HTML e falha; o comando `curl -fsSL links.nandomoreira.dev/about | sh` funciona sempre.
 
 ## Editar
 
@@ -40,7 +40,7 @@ O card do comando fica no fim de `index.html` e `en/index.html` (o botão Copiar
 
 Publique a pasta como site estático (Firebase Hosting, Caddy). A página não coleta dados, carrega só um script local de 30 linhas (o brilho que segue o mouse) e nenhum recurso de terceiros; links externos usam `rel="noopener noreferrer"`.
 
-### O script `about.sh`
+### O script `links.sh`
 
 - Não faz chamada de rede, não grava arquivo e não pergunta nada; só imprime e, com `--open`, chama `xdg-open`, `open` ou `wslview` uma vez por link.
 - Sem `--open` nada abre. `--open --dry-run` lista as URLs sem abrir.

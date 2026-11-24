@@ -1,6 +1,6 @@
 #!/bin/sh
-# about.sh: print Fernando Moreira's about-me card in the terminal.
-# Source: https://github.com/nandomoreirame/links (file about.sh)
+# links.sh: print Fernando Moreira's links in the terminal.
+# Source: https://github.com/nandomoreirame/links (file links.sh)
 # Run:    curl -fsSL links.nandomoreira.dev | sh
 # It makes no network call, writes no file and asks nothing.
 # Links open in the browser only with: sh -s -- --open
@@ -9,9 +9,9 @@ VERSION="0.1.0"
 
 usage() {
   cat <<'USAGE'
-Usage: about [--open] [--dry-run] [--lang pt|en] [--no-color]
+Usage: links [--open] [--dry-run] [--lang pt|en] [--no-color]
 
-Print Fernando Moreira's about-me card. Opens nothing unless --open is given.
+Print Fernando Moreira's links. Opens nothing unless --open is given.
 
 Options:
   --open         open every link in your browser
@@ -41,7 +41,7 @@ COLOR=1
 while [ $# -gt 0 ]; do
   case "$1" in
     -h|--help) usage; exit 0 ;;
-    -V|--version) printf 'about %s\n' "$VERSION"; exit 0 ;;
+    -V|--version) printf 'links %s\n' "$VERSION"; exit 0 ;;
     --open) OPEN=1 ;;
     -n|--dry-run) DRY=1 ;;
     --no-color) COLOR=0 ;;

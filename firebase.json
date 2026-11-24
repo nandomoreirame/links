@@ -4,7 +4,7 @@
     "public": ".",
     "cleanUrls": true,
     "ignore": ["**/.*", "firebase.json", "package.json", "package-lock.json", "README.md", "tests/**", "docs/**", "node_modules/**"],
-    "rewrites": [{ "source": "/about", "destination": "/about.sh" }],
+    "rewrites": [{ "source": "/about", "destination": "/links.sh" }],
     "headers": [
       {
         "source": "**",
@@ -23,7 +23,7 @@
         ]
       },
       {
-        "source": "/about.sh",
+        "source": "/links.sh",
         "headers": [
           { "key": "Content-Type", "value": "text/plain; charset=utf-8" },
           { "key": "Cache-Control", "value": "public, max-age=300" }

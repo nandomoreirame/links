@@ -5,7 +5,7 @@ import { readFileSync, mkdtempSync, writeFileSync, chmodSync, rmSync, existsSync
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 
-const script = new URL("../about.sh", import.meta.url).pathname;
+const script = new URL("../links.sh", import.meta.url).pathname;
 
 const run = (args = [], env = {}) =>
   spawnSync("/bin/sh", [script, ...args], {
@@ -26,7 +26,7 @@ test("--help exits 0 and prints usage on stdout", () => {
 test("--version prints the version", () => {
   const r = run(["--version"]);
   assert.equal(r.status, 0);
-  assert.match(r.stdout, /^about \d+\.\d+\.\d+\n$/);
+  assert.match(r.stdout, /^links \d+\.\d+\.\d+\n$/);
 });
 
 test("an unknown flag exits 2 with the error on stderr", () => {
@@ -73,7 +73,7 @@ test("no em or en dashes in the script", () => {
 
 // --open: stub openers in a temp PATH so no browser starts.
 const withOpener = (name, fn) => {
-  const dir = mkdtempSync(join(tmpdir(), "about-"));
+  const dir = mkdtempSync(join(tmpdir(), "links-"));
   const log = join(dir, "opened.log");
   symlinkSync("/usr/bin/cat", join(dir, "cat")); // the only tool the script needs besides sh builtins
   if (name) {
