@@ -22,7 +22,7 @@ O script é o [`about.sh`](about.sh), POSIX sh, servido em `/about` como texto p
 
 ## Editar
 
-Os links ficam em `index.html` (uma `<li>` cada). A versão em inglês é `en/index.html` (servida em `/en/`): mantenha os dois arquivos com os mesmos destinos, e o teste `tests/i18n.test.mjs` confere isso. As cores são variáveis em `style.css`.
+O cartão do comando fica no fim de `index.html` e `en/index.html` (o botão Copiar é revelado pelo `city.js`). Os links ficam em `index.html` (uma `<li>` cada). A versão em inglês é `en/index.html` (servida em `/en/`): mantenha os dois arquivos com os mesmos destinos, e o teste `tests/i18n.test.mjs` confere isso. As cores são variáveis em `style.css`.
 
 ## Segurança
 

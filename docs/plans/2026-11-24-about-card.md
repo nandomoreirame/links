@@ -2,7 +2,7 @@
 
 **Goal:** Replace the credit footer with a Terminal Noir card that teaches `curl -fsSL links.nandomoreira.dev/about | sh` and copies it with one click.
 **Origin:** /dev implement
-**Status:** in progress
+**Status:** done
 **Out of scope:** The nandomoreira.dev site card (separate plan), typing animation, run counters, a new script file.
 **Total Tasks:** 3
 
