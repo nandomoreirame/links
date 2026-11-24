@@ -231,3 +231,39 @@ window.addEventListener("pointermove", event => {
 document.documentElement.addEventListener("pointerleave", resetParallax);
 window.addEventListener("blur", resetParallax);
 parallaxAllowed.addEventListener("change", resetParallax);
+
+// Copy buttons ship hidden: without this script the page never promises an action.
+for (const button of document.querySelectorAll?.("[data-copy]") ?? []) {
+  const source = document.getElementById(button.dataset.copy);
+  if (!source) continue;
+  const label = button.textContent;
+  let resetTimer = 0;
+
+  const selectSource = () => {
+    const range = document.createRange();
+    range.selectNodeContents(source);
+    const selection = window.getSelection();
+    selection.removeAllRanges();
+    selection.addRange(range);
+  };
+
+  const showCopied = () => {
+    clearTimeout(resetTimer);
+    button.setAttribute("data-copied", "");
+    button.textContent = button.dataset.labelCopied;
+    resetTimer = setTimeout(() => {
+      button.removeAttribute("data-copied");
+      button.textContent = label;
+    }, 2000);
+  };
+
+  button.hidden = false;
+  button.addEventListener("click", async () => {
+    try {
+      await navigator.clipboard.writeText(source.textContent);
+      showCopied();
+    } catch {
+      selectSource();
+    }
+  });
+}
