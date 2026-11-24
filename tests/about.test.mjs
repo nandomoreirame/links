@@ -1,12 +1,14 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
-import { readFileSync } from "node:fs";
+import { readFileSync, mkdtempSync, writeFileSync, chmodSync, rmSync, existsSync, symlinkSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 
 const script = new URL("../about.sh", import.meta.url).pathname;
 
 const run = (args = [], env = {}) =>
-  spawnSync("sh", [script, ...args], {
+  spawnSync("/bin/sh", [script, ...args], {
     encoding: "utf8",
     input: "",
     timeout: 10000,
@@ -67,4 +69,64 @@ test("the card lists the links and never an email or phone", () => {
 
 test("no em or en dashes in the script", () => {
   assert.doesNotMatch(readFileSync(script, "utf8"), /[—–]/);
+});
+
+// --open: stub openers in a temp PATH so no browser starts.
+const withOpener = (name, fn) => {
+  const dir = mkdtempSync(join(tmpdir(), "about-"));
+  const log = join(dir, "opened.log");
+  symlinkSync("/usr/bin/cat", join(dir, "cat")); // the only tool the script needs besides sh builtins
+  if (name) {
+    const bin = join(dir, name);
+    writeFileSync(bin, `#!/bin/sh\necho "$1" >> "${log}"\n`);
+    chmodSync(bin, 0o755);
+  }
+  try {
+    return fn({ dir, log, env: { PATH: dir } });
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+};
+
+const linkCount = readFileSync(script, "utf8").match(/^[^|\n]+\|https:\/\/[^|]+\|/gm).length;
+
+test("--open calls the opener once per link", () => {
+  withOpener("xdg-open", ({ log, env }) => {
+    const r = run(["--open", "--lang", "en"], env);
+    assert.equal(r.status, 0);
+    const opened = readFileSync(log, "utf8").trim().split("\n");
+    assert.equal(opened.length, linkCount);
+    assert.ok(opened.includes("https://github.com/nandomoreirame"));
+  });
+});
+
+test("--open falls back to open when xdg-open is missing", () => {
+  withOpener("open", ({ log, env }) => {
+    assert.equal(run(["--open"], env).status, 0);
+    assert.equal(readFileSync(log, "utf8").trim().split("\n").length, linkCount);
+  });
+});
+
+test("--open --dry-run lists the URLs and opens nothing", () => {
+  withOpener("xdg-open", ({ log, env }) => {
+    const r = run(["--open", "--dry-run"], env);
+    assert.equal(r.status, 0);
+    assert.equal(existsSync(log), false);
+    assert.ok(r.stdout.includes("would open: https://github.com/nandomoreirame"));
+  });
+});
+
+test("--open without an opener exits 1 with an error", () => {
+  withOpener(null, ({ env }) => {
+    const r = run(["--open"], env);
+    assert.equal(r.status, 1);
+    assert.match(r.stderr, /^error: no browser opener found/);
+  });
+});
+
+test("without --open nothing is opened", () => {
+  withOpener("xdg-open", ({ log, env }) => {
+    run([], env);
+    assert.equal(existsSync(log), false);
+  });
 });

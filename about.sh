@@ -113,4 +113,29 @@ card() {
   printf '\n'
 }
 
+open_links() {
+  opener=""
+  for c in xdg-open open wslview; do
+    if command -v "$c" >/dev/null 2>&1; then
+      opener=$c
+      break
+    fi
+  done
+  if [ "$DRY" = 0 ] && [ -z "$opener" ]; then
+    printf 'error: no browser opener found (tried xdg-open, open, wslview); open the links above by hand\n' >&2
+    return 1
+  fi
+  links | while IFS='|' read -r label url hp he; do
+    if [ "$DRY" = 1 ]; then
+      printf 'would open: %s\n' "$url"
+    else
+      printf 'opening %s\n' "$label" >&2
+      "$opener" "$url" >/dev/null 2>&1 || printf 'warning: could not open %s\n' "$url" >&2
+    fi
+  done
+}
+
 card
+if [ "$OPEN" = 1 ]; then
+  open_links || exit 1
+fi
