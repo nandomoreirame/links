@@ -4,6 +4,7 @@
 
 ### Added
 
+- Add `about.sh`, served at `/about`: `curl -fsSL links.nandomoreira.dev/about | sh` prints an about card in pt or en and opens the links in the browser only with `--open`.
 - Apply the Fernando Moreira logo favicons (ico, svg, 16/32 png) and the apple-touch icon, same as nandomoreira.dev.
 - Add a looping strip above the page announcing the daily live (9h00 to 12h00) with links to the YouTube and Twitch channels; it pauses on hover and stops with reduced motion.
 

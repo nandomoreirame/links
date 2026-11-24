@@ -130,3 +130,17 @@ test("without --open nothing is opened", () => {
     assert.equal(existsSync(log), false);
   });
 });
+
+// The script is a third copy of the page links; fail when they drift.
+test("the script links match index.html and en/index.html", () => {
+  const hrefs = (file) => {
+    const html = readFileSync(new URL(`../${file}`, import.meta.url), "utf8");
+    const nav = html.match(/<nav aria-label="[^"]*">\s*<ul>([\s\S]*?)<\/ul>/)[1];
+    return [...nav.matchAll(/href="(https:[^"]+)"/g)].map((m) => m[1]);
+  };
+  const inScript = readFileSync(script, "utf8")
+    .match(/^[^|\n]+\|(https:\/\/[^|]+)\|/gm)
+    .map((l) => l.split("|")[1]);
+  assert.deepEqual(inScript, hrefs("index.html"));
+  assert.deepEqual(inScript, hrefs("en/index.html"));
+});
